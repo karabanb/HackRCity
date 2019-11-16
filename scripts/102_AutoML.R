@@ -58,6 +58,10 @@ plot(mp_automl_1, mp_automl_2, geom = "boxplot")
 
 plot(vi_m1)
 
+h2o.saveModel(LeadModel, path = "results")
+h2o.saveModel(h2o.getModel("GBM_1_AutoML_20191116_134202"), path = "results")
 
+save(explainer_h2o_automl1, file = "results/102_automl1.Rdata")
+save(explainer_h2o_automl2, file = "results/102_automl2.Rdata")
 
 
