@@ -27,6 +27,7 @@ wiki <- full_data %>%
   distinct() %>%
   filter(!is.na(wikipedia_area))
 
+
 cleaned_data <- cleaned_data %>% 
   select(-vars_to_drop, -starts_with('wiki')) %>%
   left_join(.,wiki, by = 'city') %>%
@@ -35,5 +36,16 @@ cleaned_data <- cleaned_data %>%
   left_join(., restaurants, by =  'city') %>%
   left_join(., things_to_do, by = 'city')
 
+mlr_data <- cleaned_data %>% 
+  filter(!is.na(touristic_popularity)) %>%
+  select(-city)
+
+regr_task <- makeRegrTask(data = mlr_data, target = 'touristic_popularity' , check.data = F)
+imp_features <- generateFilterValuesData(regr_task, perc = 0.2, method = 'rank.correlation')
+imp_features <- imp_features$data %>% filter(value > 0.61) %>% pull(name)
+
+regression_data <- cleaned_data %>% select(imp_features)
+
 save(cleaned_data, file = 'data/100_CleanedData.Rdata')
+save(regression_data, file = 'data/100_RegressionData.Rdata')
 
