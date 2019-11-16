@@ -61,4 +61,6 @@ colnames(full_data_c) <- c('city', 'Morze', 'Natura', 'SuperHotele', 'Hostele',
                            'Historia','Tlum','Restauracje','Wielkosc_miasta', 'Wysokosc',
                            'Pomniki','Sztuka','Teatr','Rowery','Imprezy')
 statystyki <- full_data_c
+
+statystyki$Miasto_rodzinne <- as.numeric(statystyki$city %in% c('poznan', 'kumquat', 'goji_berry'))
 write.csv(statystyki, file = 'data/statystyki.csv',row.names = F)
