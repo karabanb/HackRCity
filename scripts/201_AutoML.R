@@ -17,7 +17,7 @@ splits <- h2o.splitFrame(df, ratios = 0.7, seed = 42)
 
 train <- splits[[1]]
 test <- splits[[2]]
-test_df <- as.data.frame(test)
+test_df <- as.data.frame(df)
 
 y <- "touristic_popularity"
 
@@ -64,7 +64,7 @@ plot(vi_m1)
 
 h2o.saveModel(LeadModel, path = "results/202")
 
-save(explainer_h2o_automl1, file = "results/202/automl.Rdata")
+save(explainer_h2o_automl1, file = "results/201_explainerForPopularity.Rdata")
 
 ########################################
 
@@ -72,9 +72,35 @@ plot(mp_automl_1, geom = "boxplot")
 
 library(iBreakDown)
 
-breakDown <- local_attributions(explainer_h2o_automl1, 
-                                new_observation = test_df[test_df$city == "poznan",])
+#breakDown <- local_attributions(explainer_h2o_automl1, 
+          #                      new_observation = test_df[test_df$city == "poznan",])
 
+#breadDown2 <- local_attributions(explainer_h2o_automl1, 
+           #                      new_observation = test_df[test_df$city == "poznan",])
+#explainer_h2o_automl1$data <- na.omit(explainer_h2o_automl1$data)
 
+############ PDP ###############
+
+exp_data <- explainer_h2o_automl1$data
+
+pdp_ttd_nr_of_above_4 <- ingredients::partial_dependency(explainer_h2o_automl1,
+                                           variables = "restaurants_nr_of_medium_expensive", N = 50)
+
+plot(pdp_ttd_nr_of_above_4)
+
+explainer_h2o_automl1$data
+
+pred_data <- popIndexData %>% 
+  filter(is.na(touristic_popularity))
+
+write.csv(pred_data, file = "data/pred_data.csv", row.names = FALSE)
+
+pred_data_h2o <- h2o.importFile("data/pred_data.csv")
+
+predictions <- as.data.frame(predict(LeadModel, newdata = pred_data_h2o))
+
+output_df <- cbind(pred_data$city, predictions)
+colnames(output_df) <- c("city", "touristic_popularity")
+save(output_df, file = "results/201/1_output_df.Rdata")
 
 
