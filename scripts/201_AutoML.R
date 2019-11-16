@@ -81,14 +81,29 @@ library(iBreakDown)
 
 ############ PDP ###############
 
-exp_data <- explainer_h2o_automl1$data
+exp_data <- explainer_h2o_automl1$data %>% select(things_to_do_nr_of_above_4,
+                                                  things_to_do_total_nr_reviews,
+                                                  accommodations_per1k_given,
+                                                  restaurants_nr_of_medium_expensive)
 
-pdp_ttd_nr_of_above_4 <- ingredients::partial_dependency(explainer_h2o_automl1,
-                                           variables = "restaurants_nr_of_medium_expensive", N = 50)
+explainer_h2o_automl1$data <- na.omit(exp_data)
+
+partial_dep <- ingredients::partial_dependency(explainer_h2o_automl1,
+                                           variables = c("restaurants_nr_of_medium_expensive",
+                                                         "things_to_do_total_nr_reviews",
+                                                         "accommodations_per1k_given",
+                                                         "restaurants_nr_of_medium_expensive"),
+                                           N = 50)
+
+
 
 plot(pdp_ttd_nr_of_above_4)
 
-explainer_h2o_automl1$data
+
+
+
+
+
 
 pred_data <- popIndexData %>% 
   filter(is.na(touristic_popularity))
@@ -99,8 +114,8 @@ pred_data_h2o <- h2o.importFile("data/pred_data.csv")
 
 predictions <- as.data.frame(predict(LeadModel, newdata = pred_data_h2o))
 
-output_df <- cbind(pred_data$city, predictions)
+output_df_1 <- cbind(pred_data$city, predictions)
 colnames(output_df) <- c("city", "touristic_popularity")
-save(output_df, file = "results/201/1_output_df.Rdata")
+save(output_df, file = "results/201/output_df_1.Rdata")
 
 
