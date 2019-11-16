@@ -66,4 +66,14 @@ h2o.saveModel(LeadModel, path = "results/202")
 
 save(explainer_h2o_automl1, file = "results/202/automl.Rdata")
 
+########################################
+
+plot(mp_automl_1, geom = "boxplot")
+
+library(iBreakDown)
+
+breakDown <- local_attributions(explainer_h2o_automl1, new_observation = )
+
+
+
 
