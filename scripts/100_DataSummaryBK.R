@@ -1,6 +1,9 @@
 
 load('data/full_data.Rdata')
-
+load('data/GUS_additional_data.RData')
+load('data/hotels.Rdata')
+load('data/restaurants.Rdata')
+load('data/things_to_do.Rdata')
 
 cleaned_data <- full_data %>%
   mutate(year = as.integer(year)) %>%
