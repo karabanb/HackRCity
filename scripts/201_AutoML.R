@@ -72,7 +72,8 @@ plot(mp_automl_1, geom = "boxplot")
 
 library(iBreakDown)
 
-breakDown <- local_attributions(explainer_h2o_automl1, new_observation = )
+breakDown <- local_attributions(explainer_h2o_automl1, 
+                                new_observation = test_df[test_df$city == "poznan",])
 
 
 
