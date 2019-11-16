@@ -63,4 +63,10 @@ colnames(full_data_c) <- c('city', 'Morze', 'Natura', 'SuperHotele', 'Hostele',
 statystyki <- full_data_c
 
 statystyki$Miasto_rodzinne <- as.numeric(statystyki$city %in% c('poznan', 'kumquat', 'goji_berry'))
+things_to_do$things_to_do_number[is.na(things_to_do$things_to_do_number)] <- 0
+things_to_do <- things_to_do %>% select(city, things_to_do_number) %>%
+  mutate(to_do = normalize(things_to_do_number))
+things_to_do <- things_to_do %>% select(city, to_do)
+statystyki <- statystyki %>% left_join(things_to_do, by = 'city')
+
 write.csv(statystyki, file = 'data/statystyki.csv',row.names = F)
