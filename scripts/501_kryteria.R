@@ -58,7 +58,7 @@ full_data_c <- full_data_c %>%
          Teatr, Sciezki_rowerowe, Liczba_imprez)
 full_data_c <- cbind(full_data_b$city, full_data_c)
 colnames(full_data_c) <- c('city', 'Morze', 'Natura', 'SuperHotele', 'Hostele',
-                           'Historia','Tlum','Wielkosc_miasta', 'Wysokosc',
+                           'Historia','Tlum','Restauracje','Wielkosc_miasta', 'Wysokosc',
                            'Pomniki','Sztuka','Teatr','Rowery','Imprezy')
 statystyki <- full_data_c
-write.csv(statystyki, file = 'statystyki.csv',row.names = F)
+write.csv(statystyki, file = 'data/statystyki.csv',row.names = F)
