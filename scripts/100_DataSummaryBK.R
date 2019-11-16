@@ -44,7 +44,7 @@ regr_task <- makeRegrTask(data = mlr_data, target = 'touristic_popularity' , che
 imp_features <- generateFilterValuesData(regr_task, perc = 0.2, method = 'rank.correlation')
 imp_features <- imp_features$data %>% filter(value > 0.61) %>% pull(name)
 
-regression_data <- cleaned_data %>% select(imp_features)
+regression_data <- cleaned_data %>% select(imp_features, year, city, touristic_popularity)
 
 save(cleaned_data, file = 'data/100_CleanedData.Rdata')
 save(regression_data, file = 'data/100_RegressionData.Rdata')
