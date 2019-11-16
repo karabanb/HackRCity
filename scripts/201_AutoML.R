@@ -1,6 +1,8 @@
 load("data/100_CleanedData.Rdata")
+load("data/100_RegressionData.Rdata")
 
-popIndexData <- cleaned_data %>% 
+popIndexData <- regression_data %>% 
+  as.data.frame() %>% 
   filter(year == 2018)
 
 train_val <- popIndexData %>% 
@@ -36,7 +38,7 @@ LeadModel <- aml@leader
 custom_predict <- function(model, newdata)  {
   newdata_h2o <- as.h2o(newdata)
   res <- as.data.frame(h2o.predict(model, newdata_h2o))
-  return(as.numeric(res$predict)[-1])
+  return(as.numeric(res$predict))
 }
 
 explainer_h2o_automl1 <- explain(model = LeadModel, 
@@ -45,6 +47,8 @@ explainer_h2o_automl1 <- explain(model = LeadModel,
                                  predict_function = custom_predict,
                                  label = "h2o autoML")
 
+explainer_h2o_automl1$y_hat
+
 plot(explainer_h2o_automl1$y, explainer_h2o_automl1$y_hat)
 lines(c(0,3000), c(0,3000))
 
@@ -52,13 +56,14 @@ mp_automl_1 <- model_performance(explainer_h2o_automl1)
 
 plot(mp_automl_1)
 
-#vi_m1 <- variable_importance(explainer_h2o_automl1)
+vi_m1 <- DALEX::variable_importance(explainer_h2o_automl1, n_sample = 10)
+plot(vi_m1)
 #vi_m2 <- variable_importance(explainer_h2o_automl2)
 
 #plot(vi_m1)
 
-h2o.saveModel(LeadModel, path = "results/201")
+h2o.saveModel(LeadModel, path = "results/202")
 
-save(explainer_h2o_automl1, file = "results/201/automl1.Rdata")
+save(explainer_h2o_automl1, file = "results/202/automl.Rdata")
 
 
